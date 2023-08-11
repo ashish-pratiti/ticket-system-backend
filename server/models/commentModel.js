@@ -9,11 +9,11 @@ const CommentSchema = new Schema({
         required: true,
         trim: true
     },
-    ticket: {
+    ticketId: {
         type: mangoose.Schema.Types.ObjectId,//this is the id of the ticket
         ref: 'ticket'//this is the ticket model
     },
-    user: {
+    userId: {
         type: mangoose.Schema.Types.ObjectId,//this is the id of the user who created the comment
         ref: 'user'//this is the user model
     },

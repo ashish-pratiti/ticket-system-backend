@@ -1,5 +1,6 @@
 const Ticket = require('../models/ticketModel'); // Adjust the path as needed
 const User = require('../models/userModel'); 
+const Comment = require('../models/commentModel');
 
 // Controller methods
 const ticketController = {
@@ -130,7 +131,12 @@ const ticketController = {
 
    console.log(req.body);
 
-    const agentId = req.body.id; 
+    //checked if req status is invalid 
+    if (!['open', 'pending', 'closed'].includes(newStatus)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const userId = req.body.id; 
 
     // Find the ticket by its ID
     const ticket = await Ticket.findById(ticketId);
@@ -139,21 +145,34 @@ const ticketController = {
       return res.status(404).json({ message: 'Ticket not found' });
     }
 
-    // Only allow agents to update tickets
-    if (ticket.agent.toString() !== agentId) {
-      return res.status(403).json({ message: 'You do not have permission to update this ticket' });
-    }
+    // Only allow agents to update 
+    //comment because we want to allow user to update the ticket status 
+    // if (ticket.agent.toString() !== userId) {
+    //   return res.status(403).json({ message: 'You do not have permission to update this ticket' });
+    // }
 
     // Update the ticket's status and add a comment
     ticket.status = newStatus;
 
-    // Add the new comment to the ticket
-    // ticket.comments.push({ agent: agentId, text: comment });
+    //create a new comment using the comment model
+    const newComment = new Comment({ comment:comment , ticketId:ticketId ,userId: userId });
+
+    //save the comment in the database
+    await newComment.save();
+
+    //get the comment id
+    const commentId = newComment._id;
+
+    //push the comment id in the ticket comments array
+    ticket.comments.push(commentId);
+
 
     // Update the ticket in the database
     await ticket.save();
 
-    res.status(200).json({ message: 'Ticket status and comment updated successfully' });
+   // res.status(200).json({ message: 'Ticket status and comment updated successfully' });
+    res.status(200).json(ticket);
+
   } catch (error) {
     next(error);
   }
