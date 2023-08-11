@@ -42,13 +42,22 @@ exports.allowIfLoggedin = async (req, res, next) => {
   }
 }
 
+// Tested with Postman and it works
 exports.signup = async (req, res, next) => {
   try {
-    const { role, email, password } = req.body
+    const { email,password,role } = req.body
+
+    console.log(role, email, password);
+    //if email already exists
+    const alreadyExist = await User.findOne({ email });
+
+    console.log(alreadyExist);
+    if (alreadyExist ) return res.status(401).json({ message: "Email already exists..." });
+    
     const hashedPassword = await hashPassword(password);
     const newUser = new User({ email, password: hashedPassword, role: role || "basic" });
     const accessToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d"
+      expiresIn: "365d"
     });
     newUser.accessToken = accessToken;
     await newUser.save();
@@ -61,25 +70,45 @@ exports.signup = async (req, res, next) => {
   }
 }
 
+// Tested with Postman and it works
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    // Find the user by email
     const user = await User.findOne({ email });
-    if (!user) return next(new Error('Email does not exist'));
+
+    // If user is not found, return an error
+    if (!user) {
+      return res.status(401).json({ message: 'Email does not exist' });
+    }
+
+    // Validate the password
     const validPassword = await validatePassword(password, user.password);
-    if (!validPassword) return next(new Error('Password is not correct'))
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Password is not correct' });
+    }
+
+    // Generate a new JWT token
     const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d"
+      expiresIn: '365d'
     });
-    await User.findByIdAndUpdate(user._id, { accessToken })
+
+    // Update user's accessToken in the database
+    await User.findByIdAndUpdate(user._id, { accessToken });
+
+    // Return user information and token
     res.status(200).json({
-      data: { email: user.email, role: user.role },
+      data: { id:user._id ,email: user.email, role: user.role },
       accessToken
-    })
+    });
   } catch (error) {
+    // Handle any unexpected errors
     next(error);
   }
-}
+};
+
+
 
 exports.getUsers = async (req, res, next) => {
   const users = await User.find({});

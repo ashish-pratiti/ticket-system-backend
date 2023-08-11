@@ -5,8 +5,8 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
-    trim: true
-  },
+    trim: true,
+    },
   password: {
     type: String,
     required: true
@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   role: {
     type: String,
     default: 'basic',
-    enum: ["basic", "supervisor", "admin"]
+    enum: ["basic", "agent", "admin"]
   },
   accessToken: {
     type: String

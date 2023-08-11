@@ -12,11 +12,17 @@ require("dotenv").config({
 const app = express();
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
-mongoose.connect('mongodb://localhost:27017/rbac', { useNewUrlParser: true }).then(() => {
+// mongoose.connect('mongodb+srv://shubhamwaykar:shubhamwaykar@test.spzmduu.mongodb.net/test', { useNewUrlParser: true }).then(() => {
+//   console.log('Connected to the Database successfully')
+// });
+
+mongoose.connect('mongodb+srv://shubhamwaykar:shubhamwaykar@test.spzmduu.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
   console.log('Connected to the Database successfully')
 });
+
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
