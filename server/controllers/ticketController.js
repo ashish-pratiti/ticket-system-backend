@@ -216,8 +216,8 @@ getTicketById:async(req,res)=>{
     //get all tickets assigned to agent
 
     getTickets:async(req,res)=>{
-      const userId=req.body.userId;
-      const role =req.body.role;
+      const userId=req.query.userId;
+      const role =req.query.role;
 
       if(role==='admin'){
         // get all tickets
@@ -274,6 +274,175 @@ getTicketById:async(req,res)=>{
       res.status(500).json({ error: 'An error occurred while fetching tickets.' });
     }
   },
+
+
+
+getTicketsTodayByTwoHourIntervals : async (req, res) => {
+      try {
+          const indiaTimeOffset = 5.5 * 60 * 60 * 1000; // UTC offset for India (UTC+5:30) in milliseconds
+  
+          const now = new Date();
+          const today = new Date(now - indiaTimeOffset); // Adjusted for India timezone
+          today.setHours(0, 0, 0, 0); // Set the time to midnight
+  
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1); // Set to the next day
+  
+          const tickets = await Ticket.aggregate([
+              {
+                  $match: {
+                      date: { $gte: today, $lt: tomorrow }
+                  }
+              },
+              {
+                  $group: {
+                      _id: { $hour: { $add: ['$date', indiaTimeOffset] } },
+                      count: { $sum: 1 }
+                  }
+              },
+              {
+                  $project: {
+                      _id: 0,
+                      hour: {
+                          $concat: [
+                              {
+                                  $cond: [
+                                      { $lt: ['$_id', 12] },
+                                      { $toString: '$_id' },
+                                      { $toString: { $subtract: ['$_id', 12] } }
+                                  ]
+                              },
+                              {
+                                  $cond: [
+                                      { $lt: ['$_id', 12] },
+                                      'am',
+                                      'pm'
+                                  ]
+                              }
+                          ]
+                      },
+                      count: 1
+                  }
+              },
+              {
+                  $sort: {
+                      hour: 1
+                  }
+              }
+          ]);
+  
+          res.status(200).json(tickets);
+      } catch (error) {
+          res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+      }
+  },
+
+
+  // ('/by-date/:date',
+// Fetch ticket data for a specific date
+//EXPERIMENTING IT..
+ getTicketTodayBySpecificDay: async (req, res) => {
+  try {
+    const selectedDate = new Date(req.params.date);
+    const nextDay = new Date(selectedDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const tickets = await Ticket.aggregate([
+      {
+        $match: {
+          date: { $gte: selectedDate, $lt: nextDay },
+        },
+      },
+      {
+        $group: {
+          _id: { $hour: { $add: ['$date', 5.5 * 60 * 60 * 1000] } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          hour: {
+            $concat: [
+              {
+                $cond: [
+                  { $lt: ['$_id', 12] },
+                  { $toString: '$_id' },
+                  { $toString: { $subtract: ['$_id', 12] } },
+                ],
+              },
+              {
+                $cond: [{ $lt: ['$_id', 12] }, 'am', 'pm'],
+              },
+            ],
+          },
+          count: 1,
+        },
+      },
+      {
+        $sort: {
+          hour: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+  }
+},
+
+
+
+
+// Fetch ticket data for a selected month
+//'/by-month/:year/:month'
+
+getTicketMonthBySpecificMonth: async (req, res) => {
+  try {
+    const selectedYear = parseInt(req.query.year);
+    const selectedMonth = parseInt(req.query.month);
+
+    console.log('selectemonth',selectedMonth);
+    console.log('selectedYear',selectedYear);
+
+    const startDate = new Date(selectedYear, selectedMonth - 1, 1); // Month is 0-indexed
+    const endDate = new Date(selectedYear, selectedMonth, 0);
+
+    const tickets = await Ticket.aggregate([
+      {
+        $match: {
+          date: { $gte: startDate, $lt: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: '$date' },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          day: '$_id',
+          count: 1,
+        },
+      },
+      {
+        $sort: {
+          day: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+  }
+},
+
+  
+
 
     
 };

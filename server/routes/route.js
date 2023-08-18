@@ -52,6 +52,12 @@ router.get('/assignedTickets',ticketController.getAssignedAgentTickets);
 
 router.get('/tickets',ticketController.getTickets);
 
+router.get('/tickets/today', ticketController.getTicketsTodayByTwoHourIntervals);
+
+router.get('/tickets/by-date/:date',ticketController.getTicketTodayBySpecificDay);
+
+router.get('/tickets/by-month',ticketController.getTicketMonthBySpecificMonth);
+
 //comment routes
 
 router.get('/commentsInTicket/:ticketId',commentController.getAllCommentsByTicket);
