@@ -15,16 +15,7 @@ const ticketController = {
     }
   },
 
-  // Get all tickets
-  getAllTickets: async (req, res) => {
-    try {
-      const tickets = await Ticket.find();
-      res.status(200).json(tickets);
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching tickets.' });
-    }
-  },
-
+ 
   // Get a specific ticket by ID
   getTicketById: async (req, res) => {
     try {
@@ -84,6 +75,7 @@ const ticketController = {
         try {
           const ticketId = req.body.ticketId;
           const agentId = req.body.agentId;
+
           
           // Check if the requesting user is an admin
           //const requestingUserId = req.user.id;//original // Assuming you have user information stored in req.user
@@ -124,12 +116,11 @@ const ticketController = {
       },
 
 
+  //Successfully update the ticket status and add a comment -after a lot of struggle :(
   updateTicketStatusAndComment : async (req, res, next) => {
   try {
     const { ticketId, newStatus, comment } = req.body;
    // const agentId = req.user.userId; // Assuming you have extracted the agent's userId from the JWT
-
-   console.log(req.body);
 
     //checked if req status is invalid 
     if (!['open', 'pending', 'closed'].includes(newStatus)) {
@@ -160,6 +151,7 @@ const ticketController = {
     //save the comment in the database
     await newComment.save();
 
+
     //get the comment id
     const commentId = newComment._id;
 
@@ -178,50 +170,86 @@ const ticketController = {
   }
 },
 
-// get all ticket Created By user
-  getAllTicketCreatedByUser:async(req,res)=>{
-    try{
-        const userId=req.query.userId;
-        console.log(userId);
-        const tickets=await Ticket.find({user:userId});
-        console.log(tickets);
-        res.status(200).json(tickets);
-    }catch(error){
-      console.log(error);
-      res.status(500).json({ error: 'An error occurred while fetching tickets.' });
-    }
-  },
-
-  //get ticket by id 
-
-  getTicketById:async(req,res)=>{
-    try{
-       const ticketId=req.body.ticketId;
-       console.log(ticketId);
-        const ticket=await Ticket.findById(ticketId);
+//get ticket by id 
+getTicketById:async(req,res)=>{
+  try{
+    const ticketId=req.body.ticketId;
+    console.log(ticketId);
+    const ticket=await Ticket.findById(ticketId);
         res.status(200).json(ticket);
-
-    }catch(error){
-      console.log(error);
-      res.status(500).json({ error: 'An error occurred while fetching tickets.' });
-    }
-  },
-
-  //get ticket details by id 
-  //localhost:3002/ticket/${ticketId}
-  getTicketDetailsById:async(req,res)=>{
-    try{
+        
+      }catch(error){
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+      }
+    },
+    
+    //get ticket details by id 
+    //localhost:3002/ticket/${ticketId}
+    getTicketDetailsById:async(req,res)=>{
+      try{
         const ticketId=req.params.ticketId;
         console.log(ticketId);
-          const ticket=await Ticket.findById(ticketId);
-          res.status(200).json(ticket);
-    }catch(error){
-      console.log(error);
-      res.status(500).json({ error: 'An error occurred while fetching tickets.' });
-    }
-  },
+        const ticket=await Ticket.findById(ticketId);
+        res.status(200).json(ticket);
+      }catch(error){
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+      }
+    },
+    
+    
+    // get all ticket Created By user
+      getAllTicketCreatedByUser:async(req,res)=>{
+        try{
+            const userId=req.query.userId;
+            console.log(userId);
+            const tickets=await Ticket.find({user:userId});
+            console.log(tickets);
+            res.status(200).json(tickets);
+        }catch(error){
+          console.log(error);
+          res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+        }
+      },
 
-  //get all tickets assigned to agent
+    //get all tickets assigned to agent
+
+    getTickets:async(req,res)=>{
+      const userId=req.body.userId;
+      const role =req.body.role;
+
+      if(role==='admin'){
+        // get all tickets
+        try{
+          const tickets = await Ticket.find();
+          res.status(200).json(tickets);
+        }catch(error){
+          console.log('error occured',error);
+        }
+      }
+      else if (role === 'agent'){
+        //assigned tickets
+        try{
+          const tickets=await Ticket.find({agent:userId});
+          res.status(200).json(tickets);
+        }catch(error){
+          console.log('error',error);
+        }
+      }else{
+        //ticket created by user
+        try{  
+          const tickets=await Ticket.find({user:userId});
+          res.status(200).json(tickets);
+
+        }catch(error){
+          console.log('error',error);
+        }
+
+      }
+
+    },
+
 
   getAssignedAgentTickets:async(req,res)=>{
     try{
@@ -235,7 +263,18 @@ const ticketController = {
     }catch(error){
       console.log(error);
     }
-  }
+    },
+
+   // Get all tickets
+   getAllTickets: async (req, res) => {
+    try {
+      const tickets = await Ticket.find();
+      res.status(200).json(tickets);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while fetching tickets.' });
+    }
+  },
+
     
 };
 

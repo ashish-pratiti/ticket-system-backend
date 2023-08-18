@@ -52,7 +52,7 @@ exports.signup = async (req, res, next) => {
     const alreadyExist = await User.findOne({ email });
 
     console.log(alreadyExist);
-    if (alreadyExist ) return res.status(401).json({ message: "Email already exists..." });
+    if (alreadyExist ) return res.status(400).json({ message: "Email already exists..." });
     
     const hashedPassword = await hashPassword(password);
     const newUser = new User({ email, password: hashedPassword, role: role || "basic" });
@@ -112,6 +112,14 @@ exports.login = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
   const users = await User.find({});
+  res.status(200).json({
+    data: users
+  });
+}
+
+// get agents
+exports.getAgents = async (req, res, next) => {
+  const users = await User.find({role:'agent'});
   res.status(200).json({
     data: users
   });

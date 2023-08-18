@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const ticketController = require('../controllers/ticketController');
+const commentController = require('../controllers/commentController');
+
 
 router.post('/signup', userController.signup);
 
@@ -15,6 +17,8 @@ router.get('/user/:userId',  userController.getUser);
 // router.get('/users', userController.allowIfLoggedin, userController.grantAccess('readAny', 'profile'), userController.getUsers);
 
 router.get('/users',  userController.getUsers);
+
+router.get('/getAgents',  userController.getAgents);
 
 router.put('/user/:userId', userController.allowIfLoggedin, userController.grantAccess('updateAny', 'profile'), userController.updateUser);
 
@@ -43,5 +47,14 @@ router.get('/ticketDetailsById/:ticketId', ticketController.getTicketDetailsById
 
 //get alll ticket assigned to agent
 router.get('/assignedTickets',ticketController.getAssignedAgentTickets);
+
+//get tickets based on roles
+
+router.get('/tickets',ticketController.getTickets);
+
+//comment routes
+
+router.get('/commentsInTicket/:ticketId',commentController.getAllCommentsByTicket);
+
 
 module.exports = router;
