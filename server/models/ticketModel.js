@@ -7,6 +7,10 @@ const TicketSchema=new Schema({
         required:true,
         trim:true
     },
+    category:{
+        type:String,
+        required:true,
+    },
     description:{
         type:String,
         required:true
@@ -23,7 +27,12 @@ const TicketSchema=new Schema({
     user:{
         type:mangoose.Schema.Types.ObjectId,//this is the id of the user who created the ticket
         ref:'user'//this is the user model
+    },      
+    useremail:{
+        type:String,
+        required:true,
     },
+
     agent:{
         type:mangoose.Schema.Types.ObjectId, //this is the id of the agent who is assigned to the ticket
         ref:'user'

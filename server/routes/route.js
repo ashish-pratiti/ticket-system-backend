@@ -64,9 +64,6 @@ router.get('/commentsInTicket/:ticketId',commentController.getAllCommentsByTicke
 
 
 
-//get email
-router.get('/user/email', userController.getUserEmail);
-
 //update tickets status
 router.put('/tickets/status', ticketController.updateStatus);
 
