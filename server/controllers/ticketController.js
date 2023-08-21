@@ -444,6 +444,42 @@ getTicketMonthBySpecificMonth: async (req, res) => {
   
 
 
+
+updateStatus: async (req, res) => {
+  const { ticketIds, newStatus } = req.query;
+
+  try {
+    const updatedTickets = await Ticket.updateMany(
+      { _id: { $in: ticketIds.split(',') } },
+      { $set: { status: newStatus } }
+    );
+
+    return res.status(200).json({ message: 'Ticket statuses updated successfully', updatedTickets });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+},
+
+
+
+//changing status
+updateStatus: async (req, res) => {
+  const { ticketIds, newStatus } = req.query;
+
+  try {
+    const updatedTickets = await Ticket.updateMany(
+      { _id: { $in: ticketIds.split(',') } },
+      { $set: { status: newStatus } }
+    );
+
+    return res.status(200).json({ message: 'Ticket statuses updated successfully', updatedTickets });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+},
+
     
 };
 

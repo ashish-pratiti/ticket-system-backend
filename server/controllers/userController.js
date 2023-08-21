@@ -164,3 +164,21 @@ exports.deleteUser = async (req, res, next) => {
     next(error)
   }
 }
+
+
+  
+//getting email
+exports.getUserEmail = async (req, res) => {
+  const userId = req.params.userId; // Use req.query to get the userId from query parameters
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ email: user.email });
+  } catch (error) {
+    console.log('Error fetching user email:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}

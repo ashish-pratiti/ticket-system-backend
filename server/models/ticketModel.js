@@ -50,6 +50,22 @@ const TicketSchema=new Schema({
     }]
 });
 
+
+
+// TicketSchema.pre('save', async function (next) {
+//     try {
+//         if (!this.ticketId) {
+//             const count = await this.constructor.countDocuments();
+//             const sequence = (count + 1).toString().padStart(6, '0'); 
+//             this.ticketId = `tic${sequence}`;
+//         }
+//         next();
+//     } catch (error) {
+//         next(error);
+//     }
+// });
+
+
 const Ticket=mangoose.model('ticket',TicketSchema);
 
 module.exports=Ticket;

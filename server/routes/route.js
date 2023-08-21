@@ -63,4 +63,13 @@ router.get('/tickets/by-month',ticketController.getTicketMonthBySpecificMonth);
 router.get('/commentsInTicket/:ticketId',commentController.getAllCommentsByTicket);
 
 
+
+//get email
+router.get('/user/email', userController.getUserEmail);
+
+//update tickets status
+router.put('/tickets/status', ticketController.updateStatus);
+
+
+
 module.exports = router;

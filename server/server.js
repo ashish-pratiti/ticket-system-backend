@@ -18,9 +18,10 @@ const PORT = process.env.PORT || 3002;
 //   console.log('Connected to the Database successfully')
 // });
 
-mongoose.connect('mongodb+srv://shubhamwaykar:shubhamwaykar@test.spzmduu.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
+mongoose.connect('mongodb+srv://ashishgaiwad:Ashish@cluster0.twe0ca8.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
   console.log('Connected to the Database successfully')
 });
+
 
 
 
