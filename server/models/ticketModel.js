@@ -2,6 +2,7 @@ const mangoose=require('mongoose');
 const Schema=mangoose.Schema;
 
 const TicketSchema=new Schema({
+    
     title:{
         type:String,
         required:true,
@@ -37,6 +38,9 @@ const TicketSchema=new Schema({
         type:mangoose.Schema.Types.ObjectId, //this is the id of the agent who is assigned to the ticket
         ref:'user'
     },
+    agentemail:{
+        type:String,
+    },
     comments:[{
         type:mangoose.Schema.Types.ObjectId,//this is the id of the comment
         ref:'comment'//this is the comment model
@@ -61,18 +65,6 @@ const TicketSchema=new Schema({
 
 
 
-// TicketSchema.pre('save', async function (next) {
-//     try {
-//         if (!this.ticketId) {
-//             const count = await this.constructor.countDocuments();
-//             const sequence = (count + 1).toString().padStart(6, '0'); 
-//             this.ticketId = `tic${sequence}`;
-//         }
-//         next();
-//     } catch (error) {
-//         next(error);
-//     }
-// });
 
 
 const Ticket=mangoose.model('ticket',TicketSchema);

@@ -75,6 +75,7 @@ const ticketController = {
         try {
           const ticketId = req.body.ticketId;
           const agentId = req.body.agentId;
+          const agentemail = req.body.agentemail;
 
           
           // Check if the requesting user is an admin
@@ -99,6 +100,7 @@ const ticketController = {
           const updatedTicket = await Ticket.findByIdAndUpdate(
             ticketId,
             { agent: agentId },
+            
             { new: true }
           );
           
