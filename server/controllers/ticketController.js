@@ -403,8 +403,6 @@ getTicketMonthBySpecificMonth: async (req, res) => {
     const selectedYear = parseInt(req.query.year);
     const selectedMonth = parseInt(req.query.month);
 
-    console.log('selectemonth',selectedMonth);
-    console.log('selectedYear',selectedYear);
 
     const startDate = new Date(selectedYear, selectedMonth - 1, 1); // Month is 0-indexed
     const endDate = new Date(selectedYear, selectedMonth, 0);
