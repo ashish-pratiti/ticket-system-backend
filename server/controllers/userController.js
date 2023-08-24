@@ -12,7 +12,7 @@ async function validatePassword(plainPassword, hashedPassword) {
   return await bcrypt.compare(plainPassword, hashedPassword);
 }
 
-exports.grantAccess = function(action, resource) {
+exports.grantAccess = function (action, resource) {
   return async (req, res, next) => {
     try {
       const permission = roles.can(req.user.role)[action](resource);
@@ -28,40 +28,56 @@ exports.grantAccess = function(action, resource) {
   }
 }
 
+// exports.allowIfLoggedin = async (req, res, next) => {
+//   try {
+//     const token = res.body;
+//     if (!token)
+//       return res.status(401).json({
+//         error: "You need to be logged in to access this route"
+//       });
+//     req.user = token;
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 exports.allowIfLoggedin = async (req, res, next) => {
   try {
-    const user = res.locals.loggedInUser;
-    if (!user)
+    const token = req.headers.authorization;
+
+    if (!token) {
       return res.status(401).json({
         error: "You need to be logged in to access this route"
       });
-    req.user = user;
+    }
+
+    req.user = token; // Attach the token to the request object
     next();
   } catch (error) {
     next(error);
   }
-}
+};
 
 // Tested with Postman and it works
 exports.signup = async (req, res, next) => {
   try {
-    const { email,password,role } = req.body
+    const { email, password, role, firstname, lastname } = req.body
 
-    console.log(role, email, password);
+    console.log(role, email, password, firstname, lastname);
     //if email already exists
     const alreadyExist = await User.findOne({ email });
 
     console.log(alreadyExist);
-    if (alreadyExist ) return res.status(400).json({ message: "Email already exists..." });
-    
+    if (alreadyExist) return res.status(250).json({ message: "Email already exists..." });
+
     const hashedPassword = await hashPassword(password);
-    const newUser = new User({ email, password: hashedPassword, role: role || "basic" });
+    const newUser = new User({ email, password: hashedPassword, firstname, lastname, role: role || "basic" });
     const accessToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "365d"
     });
     newUser.accessToken = accessToken;
     await newUser.save();
-    res.json({
+    res.status(200).json({
       data: newUser,
       message: "You have signed up successfully"
     })
@@ -80,13 +96,13 @@ exports.login = async (req, res, next) => {
 
     // If user is not found, return an error
     if (!user) {
-      return res.status(401).json({ message: 'Email does not exist' });
+      return res.status(250).json({ message: 'email or password is incorrect!' });
     }
 
     // Validate the password
     const validPassword = await validatePassword(password, user.password);
     if (!validPassword) {
-      return res.status(401).json({ message: 'Password is not correct' });
+      return res.status(250).json({ message: 'email or password is incorrect!' });
     }
 
     // Generate a new JWT token
@@ -99,7 +115,7 @@ exports.login = async (req, res, next) => {
 
     // Return user information and token
     res.status(200).json({
-      data: { id:user._id ,email: user.email, role: user.role },
+      data: { id: user._id, email: user.email, role: user.role },
       accessToken
     });
   } catch (error) {
@@ -107,6 +123,7 @@ exports.login = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 
@@ -119,7 +136,7 @@ exports.getUsers = async (req, res, next) => {
 
 // get agents
 exports.getAgents = async (req, res, next) => {
-  const users = await User.find({role:'agent'});
+  const users = await User.find({ role: 'agent' });
   res.status(200).json({
     data: users
   });
@@ -152,6 +169,28 @@ exports.updateUser = async (req, res, next) => {
   }
 }
 
+exports.updateUserDetails = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const { firstname, lastname } = req.body;
+
+    // Update user document with the provided firstname and lastname
+    await User.findByIdAndUpdate(userId, { firstname, lastname });
+
+    // Fetch the updated user document
+    const updatedUser = await User.findById(userId);
+
+    res.status(200).json({
+      data: updatedUser,
+      message: 'User details updated successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 exports.deleteUser = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -164,3 +203,5 @@ exports.deleteUser = async (req, res, next) => {
     next(error)
   }
 }
+
+

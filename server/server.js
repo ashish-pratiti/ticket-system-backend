@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path')
 const User = require('./models/userModel')
 const routes = require('./routes/route.js');
+const cors = require('cors');
 require("dotenv").config({
   path: path.join(__dirname, "../.env")
 });
@@ -18,9 +19,15 @@ const PORT = process.env.PORT || 3002;
 //   console.log('Connected to the Database successfully')
 // });
 
-mongoose.connect('mongodb+srv://shubhamwaykar:shubhamwaykar@test.spzmduu.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
+// Allow requests from http://localhost:3000
+app.use(cors({
+  origin: 'http://localhost:3000',
+}));
+
+mongoose.connect('mongodb+srv://ashishgaiwad:Ashish@cluster0.twe0ca8.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
   console.log('Connected to the Database successfully')
 });
+
 
 
 

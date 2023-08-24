@@ -2,10 +2,19 @@ const mangoose=require('mongoose');
 const Schema=mangoose.Schema;
 
 const TicketSchema=new Schema({
+    ticketId: {
+        type: String,
+        unique: true,
+        
+    },
     title:{
         type:String,
         required:true,
         trim:true
+    },
+    category:{
+        type:String,
+        
     },
     description:{
         type:String,
@@ -23,7 +32,12 @@ const TicketSchema=new Schema({
     user:{
         type:mangoose.Schema.Types.ObjectId,//this is the id of the user who created the ticket
         ref:'user'//this is the user model
+    },      
+    useremail:{
+        type:String,
+        required:true,   
     },
+
     agent:{
         type:mangoose.Schema.Types.ObjectId, //this is the id of the agent who is assigned to the ticket
         ref:'user'
@@ -49,6 +63,7 @@ const TicketSchema=new Schema({
         }
     }]
 });
+
 
 const Ticket=mangoose.model('ticket',TicketSchema);
 
