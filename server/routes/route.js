@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 const ticketController = require('../controllers/ticketController');
 const commentController = require('../controllers/commentController');
 
-router.get('/', (req, res) => {
+router.get('', (req, res) => {
     res.send('Hello World');
 });
 
