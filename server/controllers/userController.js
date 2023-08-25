@@ -181,8 +181,7 @@ exports.updateUserDetails = async (req, res, next) => {
     const updatedUser = await User.findById(userId);
 
     res.status(200).json({
-      data: updatedUser,
-      message: 'User details updated successfully'
+      data: updatedUser
     });
   } catch (error) {
     next(error);
