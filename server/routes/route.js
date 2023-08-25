@@ -25,7 +25,7 @@ router.put('/user/details/:userId',
     userController.updateUserDetails
 );
 
-router.put('/user/:userId', userController.allowIfLoggedin, userController.grantAccess('updateAny', 'profile'), userController.updateUser);
+router.put('/user/role/:userId', userController.allowIfLoggedin, userController.updateUser);
 
 router.delete('/user/:userId', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'profile'), userController.deleteUser);
 
