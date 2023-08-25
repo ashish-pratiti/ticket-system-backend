@@ -5,12 +5,24 @@ const bcrypt = require('bcryptjs');
 const { roles } = require('../roles')
 
 async function hashPassword(password) {
-  return await bcrypt.hash(password, 10);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
 }
 
 async function validatePassword(plainPassword, hashedPassword) {
-  return await bcrypt.compare(plainPassword, hashedPassword);
+  const isValid = await bcrypt.compare(plainPassword, hashedPassword);
+  return isValid;
 }
+
+
+// async function hashPassword(password) {
+//   return await bcrypt.hash(password, 10);
+// }
+
+// async function validatePassword(plainPassword, hashedPassword) {
+//   return await bcrypt.compare(plainPassword, hashedPassword);
+// }
 
 exports.grantAccess = function (action, resource) {
   return async (req, res, next) => {
