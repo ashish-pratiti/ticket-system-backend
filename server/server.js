@@ -20,9 +20,7 @@ const PORT = process.env.PORT || 3002;
 // });
 
 // Allow requests from http://localhost:3000
-app.use(cors({
-  origin: ['https://ticketstm2.onrender.com'],
-}));
+app.use(cors());
 
 mongoose.connect('mongodb+srv://ashishgaiwad:Ashish@cluster0.twe0ca8.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
   console.log('Connected to the Database successfully')
