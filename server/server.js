@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3002;
 
 // Allow requests from http://localhost:3000
 app.use(cors({
-  origin: ['http://localhost:3000','https://ticketstm.vercel.app/'],
+  origin: ['http://localhost:3000','https://ticketstm2.onrender.com'],
 }));
 
 mongoose.connect('mongodb+srv://ashishgaiwad:Ashish@cluster0.twe0ca8.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true }).then(() => {
