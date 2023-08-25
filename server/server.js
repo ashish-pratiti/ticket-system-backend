@@ -54,6 +54,11 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use('/favicon.ico', (req, res) => {
+  res.status(204).end();
+});
+
+
 app.use('/', routes);
 
 app.listen(PORT, () => {
