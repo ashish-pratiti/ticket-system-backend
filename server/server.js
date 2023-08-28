@@ -52,7 +52,7 @@ app.use(async (req, res, next) => {
     next();
   }
 });
-
+cors()
 app.use('/favicon.ico', (req, res) => {
   res.status(204).end();
 });

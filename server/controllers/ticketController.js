@@ -97,10 +97,13 @@ const ticketController = {
       const agentId = req.body.agentId;
       const agentemail = req.body.agentemail;
 
+      console.log('agent email',agentemail);
 
       // Check if the requesting user is an admin
       //const requestingUserId = req.user.id;//original // Assuming you have user information stored in req.user
       const requestingUserId = req.body.id; // Assuming you have user information stored in req.user
+
+      console.log('requesting userid: ',requestingUserId);
 
       // Check if the agent exists and is an agent role
       const agent = await User.findOne({ _id: agentId, role: "agent" });
@@ -116,11 +119,11 @@ const ticketController = {
       }
 
 
+      console.log('control here');
       // Update the ticket's agent field
       const updatedTicket = await Ticket.findByIdAndUpdate(
         ticketId,
-        { agent: agentId },
-
+        { agent: agentId, agentemail: agentemail },
         { new: true }
       );
 

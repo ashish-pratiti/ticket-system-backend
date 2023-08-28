@@ -42,6 +42,9 @@ const TicketSchema=new Schema({
         type:mangoose.Schema.Types.ObjectId, //this is the id of the agent who is assigned to the ticket
         ref:'user'
     },
+    agentemail:{
+        type:String,
+    },  
     comments:[{
         type:mangoose.Schema.Types.ObjectId,//this is the id of the comment
         ref:'comment'//this is the comment model

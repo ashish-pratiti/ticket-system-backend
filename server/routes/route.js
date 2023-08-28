@@ -30,7 +30,7 @@ router.put('/user/details/:userId',
 
 router.put('/user/role/:userId', userController.allowIfLoggedin, userController.updateUser);
 
-router.delete('/user/:userId', userController.allowIfLoggedin, userController.grantAccess('deleteAny', 'profile'), userController.deleteUser);
+router.delete('/user/:userId', userController.allowIfLoggedin, userController.deleteUser);
 
 
 router.post('/newticket', ticketController.createTicket); //work
