@@ -15,6 +15,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3002;
 
+
 // mongoose.connect('mongodb+srv://shubhamwaykar:shubhamwaykar@test.spzmduu.mongodb.net/test', { useNewUrlParser: true }).then(() => {
 //   console.log('Connected to the Database successfully')
 // });
