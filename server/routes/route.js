@@ -27,6 +27,7 @@ router.put('/user/details/:userId',
     userController.allowIfLoggedin,
     userController.updateUserDetails
 );
+router.put('/user/role/:userId', userController.allowIfLoggedin, userController.updateUser);
 
 router.delete('/user/:userId', userController.allowIfLoggedin, userController.deleteUser);
 

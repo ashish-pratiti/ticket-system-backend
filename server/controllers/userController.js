@@ -130,6 +130,19 @@ exports.getUser = async (req, res, next) => {
   }
 }
 
+exports.updateUser = async (req, res, next) => {
+  try {
+    const { role } = req.body
+    const userId = req.params.userId;
+    await User.findByIdAndUpdate(userId, { role });
+    const user = await User.findById(userId)
+    res.status(200).json({
+      data: user
+    });
+  } catch (error) {
+    next(error)
+  }
+}
 
 exports.updateUserDetails = async (req, res, next) => {
   try {
