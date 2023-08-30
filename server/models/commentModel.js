@@ -1,5 +1,3 @@
-//comment model 
-
 const mangoose = require('mongoose');
 const Schema = mangoose.Schema;
 
@@ -10,12 +8,12 @@ const CommentSchema = new Schema({
         trim: true
     },
     ticketId: {
-        type: mangoose.Schema.Types.ObjectId,//this is the id of the ticket
-        ref: 'ticket'//this is the ticket model
+        type: mangoose.Schema.Types.ObjectId,
+        ref: 'ticket'
     },
     userId: {
-        type: mangoose.Schema.Types.ObjectId,//this is the id of the user who created the comment
-        ref: 'user'//this is the user model
+        type: mangoose.Schema.Types.ObjectId,
+        ref: 'user'
     },
     date: {
         type: Date,

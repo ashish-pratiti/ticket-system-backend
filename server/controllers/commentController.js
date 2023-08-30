@@ -1,7 +1,5 @@
 const Comment= require('../models/commentModel');
 
-// Controller methods
-
 const commentController={
     getAllCommentsByTicket: async (req, res) => {
         try {
@@ -12,7 +10,6 @@ const commentController={
             res.status(500).json({ error: 'An error occurred while fetching comments.' });
         }
     }
-    
 };
 
 module.exports=commentController;
