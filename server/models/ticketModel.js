@@ -5,7 +5,6 @@ const TicketSchema=new Schema({
     ticketId: {
         type: String,
         unique: true,
-        
     },
     title:{
         type:String,
@@ -14,7 +13,6 @@ const TicketSchema=new Schema({
     },
     category:{
         type:String,
-        
     },
     description:{
         type:String,
@@ -30,30 +28,27 @@ const TicketSchema=new Schema({
         default:Date.now
     },
     user:{
-        type:mangoose.Schema.Types.ObjectId,//this is the id of the user who created the ticket
-        ref:'user'//this is the user model
+        type:mangoose.Schema.Types.ObjectId,
+        ref:'user'
     },      
     useremail:{
         type:String,
         required:true,   
     },
-
     agent:{
-        type:mangoose.Schema.Types.ObjectId, //this is the id of the agent who is assigned to the ticket
+        type:mangoose.Schema.Types.ObjectId, 
         ref:'user'
     },
     agentemail:{
         type:String,
     },  
     comments:[{
-        type:mangoose.Schema.Types.ObjectId,//this is the id of the comment
-        ref:'comment'//this is the comment model
+        type:mangoose.Schema.Types.ObjectId,
+        ref:'comment'
     }],
-    // what is does - it stores the history of the ticket
-    //format - [{agent:agentId, action:'status changed to open', date:Date.now}]
     history:[{
         agent:{
-            type:mangoose.Schema.Types.ObjectId,//this is the id of the agent who is assigned to the ticket
+            type:mangoose.Schema.Types.ObjectId,
             ref:'user'
         },
         action:{
@@ -67,7 +62,5 @@ const TicketSchema=new Schema({
     }]
 });
 
-
 const Ticket=mangoose.model('ticket',TicketSchema);
-
 module.exports=Ticket;

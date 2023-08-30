@@ -13,11 +13,9 @@ const UserSchema = new Schema({
   },
   firstname:{
     type: String,
-    // required: true
   },
   lastname:{
     type: String,
-    
   },
   role: {
     type: String,
