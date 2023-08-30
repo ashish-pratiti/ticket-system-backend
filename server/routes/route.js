@@ -15,10 +15,7 @@ router.get('/users', userController.getUsers);
 
 router.get('/getAgents', userController.getAgents);
 
-router.put('/user/details/:userId',
-    userController.allowIfLoggedin,
-    userController.updateUserDetails
-);
+router.put('/user/details/:userId',userController.allowIfLoggedin,userController.updateUserDetails);
 
 router.put('/user/role/:userId', userController.allowIfLoggedin, userController.updateUser);
 
